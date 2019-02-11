@@ -1,6 +1,6 @@
-# Orientações para execução de testes de Back-end do Credenciamento Digital
-Os testes de back-end do Credenciamento Digital serão desenvolvidos sobre a plataforma do Postman.
-Abaixo serão descritas as orientações para download, instalação e preparação do ambiente.
+# Orientações para execução de testes de Back-end
+Os testes de back-end sempre serão desenvolvidos sobre a plataforma do Postman.
+Abaixo estarão descritas as orientações para download, instalação e preparação do ambiente.
 
 ## Preparação do ambiente
 Será necessário a instalação das ferramentas abaixo:
@@ -22,20 +22,11 @@ As configurações de ambiente como chaves de acesso, parâmetros de diretórios
 
 Em toda a execução, deverá ser informado junto do cenário de teste, o json de ambiente.
 
-## Cenários de Testes
-Os cenários de testes serão armazenados abaixo de diretórios que representam os microserviços. Dentro de cada diretório de microserviço haverá a estrutura abaixo:
-
-```
- merchant/
-         /public
-         /internal
-```
-
 ## Execução dos cenários de testes
 Para execução dos cenários de testes, inicialmente devem ser obtidos os ambientes e cenários de testes diretamente do repositório.
 
 ```
- git clone https://flaviof@bitbucket.getnet.com.br/scm/cd/backend-tests.git
+ git clone https://github.com/Phelps18/simulador-investimento-backend.git
 ```
 
 Após a cópia dos cenários de testes, deve ser definido a execução através do **Postman** ou **Newman**, descritos na seção posterior.
@@ -54,7 +45,7 @@ Após a carga do arquivo de ambiente, deve ser carregada a **collection** atrav�
 1. Acessar a opção **File / Import**;
 1. Escolher o **json** da collection a ser testada.
 ```
- merchant/public/PF - Cadastro de Cliente.postman_collection.json
+ /tests/mock-server-investment.json
 ```
 
 Com o **ambiente** e a **coleção** carregadas, para executar, basta seguir os passos abaixo:
@@ -62,41 +53,14 @@ Com o **ambiente** e a **coleção** carregadas, para executar, basta seguir os 
 1. Acessar menu **Collection / Runner**;
 1. Selecionar a **collection** na caixa de seleção;
 1. Definir o ambiente em **Enviroment**;
-1. Clicar no botão **Start Run**;
-
-**Observação**: Pode ser carregado um arquivo csv na opção **Data**.
+2. Carregado um arquivo csv na opção **Data** 
+1. Clicar no botão **Run**;
 
 ### Execução através do Newman
 A execução através do Newman é mais simples, bastando apenas indicar os arquivos de ambiente e collection como parâmetros. Abaixo um exemplo de execução.
  
 ```
-newman -e env\credenciamento-digital-dev.postman_environment.json  -c "merchant\public\PF - Cadastro de Cliente.postman_collection.json" -o output.json  -H reports.html
-```
-
-Para utilização de arquivo csv como massa de testes, pasta informar a opção -d
-
-```
-newman -e env\credenciamento-digital-dev.postman_environment.json  -c "merchant\public\PF - Cadastro de Cliente.postman_collection.json" -d data.csv -o output.json  -H reports.html
-```
-
-#### Relatórios personalizados
-Para realatórios baseados em um template, insatalar o plugin.
-
-Executando com os argumentos, template definido e nome para arquivo html de saída:
-
-```
-newman run domain\public\Consultar-Dominios.json --environment  env\credenciamento-digital-dev.json  --reporters cli,html --reporter-html-template templates\template-report-basic.hbs  --reporter-html-export reports\collection-name-report.html
+newman run tests\mock-server-investment.json --environment env\mock-server-investment-env.json -d datapool\SimularInvestimento.csv --reporters cli,html --reporter-html-template templates\newman-report-customized.hbs  --reporter-html-export reports\collection-name-report.html
 ```
 
 **Nota**: atentar para a orientação das barras para execução em ambiente linux.
-
-## Criação de Testes
-Para a criação de testes, basta definir sequencialmente a chamada dos métodos da **collection** iniciando sempre pela operação de **Autenticação**.
-
-Um novo cenário de testes pode ser feito clonando algum existente e ajustando conforme a necessidade.
-
-
-## Funções de utilidades para os testes
-Para a criação de testes, basta definir sequencialmente a chamada dos métodos da **collection** iniciando sempre pela operação de **Autenticação**.
-
-Um novo cenário de testes pode ser feito clonando algum existente e ajustando conforme a necessidade.
