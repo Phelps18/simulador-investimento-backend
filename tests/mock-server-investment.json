@@ -1,0 +1,195 @@
+{
+	"info": {
+		"_postman_id": "97a62d79-288b-4854-8140-e91e0e476577",
+		"name": "mock-server-investment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Simular investimento",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e0032800-c883-40a0-8885-695377802d1d",
+						"exec": [
+							"//carga da biblioteca de BDD",
+							"eval(environment.postmanBDD);",
+							"",
+							"let jsonBody = JSON.parse(responseBody);",
+							"",
+							"//bloco do critério de aceite",
+							"it(\"Deve retornar status HTTP '201 Created' \", () => {",
+							"    response.should.have.status(201);",
+							"});",
+							"",
+							"it('Deve conter o resultado da simulação.', () => {",
+							"    jsonBody.should.have.property(\"resultado_simulacao\").and.be.equal(\"Em 60 meses você terá guardado\");",
+							"    jsonBody.should.have.property(\"valor_total\").and.be.a(\"Number\");",
+							"    jsonBody.should.have.property(\"outras_opcoes\").and.be.a(\"Array\").and.not.empty;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6cb1aea9-779c-432e-9637-e348ec7acf5f",
+						"exec": [
+							"//carga da biblioteca de BDD",
+							"eval(environment.postmanBDD);",
+							"",
+							"// populando o payload, através de um CSV",
+							"it(\"Deve retornan o canal do arquivo externo e armazenar na variável global\", () => {",
+							"    pm.globals.set(\"tipo_perfil\", data[\"tipo_perfil\"]);",
+							"    pm.globals.set(\"valor_aplicar\", parseInt(data[\"valor_aplicar\"]));",
+							"    pm.globals.set(\"valor_investir\", parseInt(data[\"valor_investir\"]));",
+							"    pm.globals.set(\"tipo_periodo\", data[\"tipo_periodo\"]);",
+							"    pm.globals.set(\"quantidade_tempo\", parseInt(data[\"quantidade_tempo\"]));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"simulador_investimento\": {\n        \"tipo_perfil\": \"{{tipo_perfil}}\",\n        \"valor_aplicar\": \"{{valor_aplicar}}\",\n        \"valor_investir\": \"{{valor_investir}}\",\n        \"tipo_periodo\": \"{{tipo_periodo}}\",\n        \"quantidade_tempo\": \"{{quantidade_tempo}}\"\n    }\n}"
+				},
+				"url": {
+					"raw": "{{gateway-uri}}/api/{{version}}/simulador",
+					"host": [
+						"{{gateway-uri}}"
+					],
+					"path": [
+						"api",
+						"{{version}}",
+						"simulador"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Default",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/simulador",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"simulador"
+							]
+						}
+					},
+					"code": 201,
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\n  \"resultado_simulacao\": \"Em 60 meses você terá guardado\",\n  \"valor_total\": 79.565,\n  \"outras_opcoes\": [\n    {\n      \"tempo_meses\": \"72\",\n      \"valor\": \"R$ 95.434\"\n    },\n    {\n      \"tempo_meses\": \"84\",\n      \"valor\": \"R$ 112.024\"\n    },\n    {\n      \"tempo_meses\": \"96\",\n      \"valor\": \"R$ 129.369\"\n    },\n    {\n      \"tempo_meses\": \"108\",\n      \"valor\": \"R$ 147.504\"\n    }\n  ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Consultar opcoes de investimento",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "42f64e0c-7d27-4679-a10e-adb38ff66415",
+						"exec": [
+							"//carga da biblioteca de BDD",
+							"eval(environment.postmanBDD);",
+							"",
+							"let jsonBody = JSON.parse(responseBody);",
+							"",
+							"//bloco do critério de aceite",
+							"it(\"Deve retornar status HTTP '200 OK' \", () => {",
+							"    response.should.have.status(200);",
+							"});",
+							"",
+							"it(\"Deve retornar as opções de investimento para o ID informado\", () => {",
+							"    jsonBody.should.have.property(\"id\").and.be.equal(1)",
+							"    jsonBody.should.have.property(\"meses\").and.be.a(\"Array\").and.not.empty;",
+							"    jsonBody.should.have.property(\"valor\").and.be.a(\"Array\").and.not.empty;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{gateway-uri}}/api/{{version}}/simulador/1",
+					"host": [
+						"{{gateway-uri}}"
+					],
+					"path": [
+						"api",
+						"{{version}}",
+						"simulador",
+						"1"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Default",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/api/v1/simulador/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"simulador",
+								"1"
+							]
+						}
+					},
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": "{\n      \"id\": 1,\n      \"meses\": [\"112\", \"124\", \"136\", \"148\"],\n      \"valor\": [\"2.802\", \"3.174\", \"3.564\", \"3.971\"]\n}"
+				}
+			]
+		}
+	]
+}
