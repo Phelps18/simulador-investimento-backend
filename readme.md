@@ -64,3 +64,6 @@ newman run tests\mock-server-investment.json --environment env\mock-server-inves
 ```
 
 **Nota**: atentar para a orientação das barras para execução em ambiente linux.
+
+### Evidência dos testes
+Construído através do arquivo **newman-report-customized.hbs**, que está na pasta **templates**, e o relatório gerado sobre ele pós a execução dos testes, fica na pasta **reports** no fomato HTML, ambas as pastas localizam-se na raiz do workspace
